@@ -1,48 +1,75 @@
-# 🍱 Food Prediction and Calorie Estimation using Machine Learning
+# 🍱 Food Detection and Calorie Prediction
 
-This project uses machine learning to predict the type of food and estimate its calorie content based on input features such as ingredients, quantity, and nutritional values. It aims to help users make healthier food choices and track their daily intake.
-
----
-
-## 📌 Key Features
-
-- 🔍 **Food Item Classification** from user input or dataset
-- 🔢 **Calorie Prediction** using regression models
-- 📊 Trained on a labeled dataset with food names, ingredients, and calories
-- ✅ Cleaned, preprocessed, and normalized data
-- 📈 Evaluated using accuracy, RMSE, and R² score
+This project uses **deep learning and computer vision** to automatically detect food items in images and predict their **nutritional values**, including **calories, proteins, fats, and carbohydrates**. It is built using **PyTorch** and trained on the **Food-101 dataset**, one of the largest food image datasets publicly available.
 
 ---
 
-## 🧠 Machine Learning Models Used
+## 🔬 Project Motivation
 
-- Classification: Random Forest, Logistic Regression, SVM
-- Regression: Linear Regression, Decision Tree Regressor
-- Feature Scaling: MinMaxScaler
-- Model Evaluation: Accuracy, MAE, RMSE, R²
+Manually tracking food intake is time-consuming and prone to errors. This project solves that by building an AI model that:
+
+- Detects the type of food from an image
+- Predicts its approximate nutritional content
+- Helps in **health tracking**, **diet planning**, and **calorie monitoring**
 
 ---
 
+## 🧠 Model Architecture
 
+- **Backbone**: `DenseNet201` pre-trained on ImageNet
+- **Custom Classifier Head**:
+  - `Linear(1920 → 1024)`
+  - `LeakyReLU()`
+  - `Linear(1024 → 101)` (for 101 food classes)
+- **Loss Function**: CrossEntropyLoss
+- **Optimizer**: Adam
+- **Learning Rate**: 0.001
+- **Epochs**: 5 (with early stopping if accuracy > 95%)
 
-## 🗃️ Dataset
+---
 
-- 📥 **Source:** [Food-101 Dataset on Kaggle](https://www.kaggle.com/datasets/dansbecker/food-101)
-- Contains 101 categories of food images and labels
-- Used for both classification (food prediction) and calorie estimation (when combined with nutritional data)
-- Ideal for image-based and ingredient-based food ML tasks
+## 📊 Training Insights
 
-**Features (when extended with calorie info):**
-- Food Name / Category
-- Image data (JPEG)
-- Ingredients (manually mapped or extracted)
-- Calories (estimated per 100g or per serving)
+- Dataset: [Food-101](https://www.kaggle.com/datasets/dansbecker/food-101)
+- Augmentations:
+  - Random Rotation
+  - Resized Crop
+  - Horizontal Flip
+  - AutoAugment (ImageNet policy)
+- Batch Size: 128
+- Image Size: 224x224
+- Device: Trained on CPU/GPU based on availability
 
-## ▶️ How to Run
+---
 
-```bash
-# Step 1: Install dependencies
-pip install -r requirements.txt
+## 🧪 Evaluation Approach
 
-# Step 2: Run the main script
-python food_prediction.py
+- **Accuracy & Loss**: Tracked per epoch to monitor overfitting
+- **Confusion Matrix**: 101x101 comparison of true vs predicted labels
+- **ROC Curve**: For selected classes to analyze performance
+- **Nutritional Prediction**: Based on class → calorie mapping using a lookup dictionary
+
+---
+
+## 🧩 Challenges Solved
+
+- 🔁 Balanced learning across **101 diverse food classes**
+- 🖼️ Real-time food image classification
+- 🧮 Mapping food to nutrition using a **custom-built calorie dictionary**
+- ⚖️ Achieving high accuracy without overfitting by using **transfer learning**
+
+---
+
+## 📈 Visual Outputs
+
+### 📊 Accuracy & Loss Graph
+
+- Shows training accuracy and loss per epoch
+
+### 📉 ROC Curve
+
+- For classes like: Apple Pie, Baby Back Ribs, Pizza, Hamburger, Baklava
+
+### 📊 Confusion Matrix
+
+- 101x101 matrix showing performance for each class
